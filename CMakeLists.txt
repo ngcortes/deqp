@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 2.6)
 set(DELIBS_DIR "framework/delibs" CACHE STRING "Path to delibs (../delibs).")
 
 # dEQP Target.
-set(DEQP_TARGET "default" CACHE STRING "dEQP Target (default, android...)")
+# set(DEQP_TARGET "default" CACHE STRING "dEQP Target (default, android...)")
+set(DEQP_TARGET drm)
 
 project(dEQP-Core-${DEQP_TARGET})
 
