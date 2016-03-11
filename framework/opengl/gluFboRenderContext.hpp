@@ -53,7 +53,7 @@ public:
 	virtual const tcu::RenderTarget&	getRenderTarget			(void) const { return m_renderTarget;				}
 	virtual void						postIterate				(void);
 
-	virtual deUint32					getDefaultFramebuffer	(void) const { return m_framebuffer; }
+    virtual deUint32					getDefaultFramebuffer	(void) const { return m_context->getDefaultFramebuffer(); }
 
 private:
 	void								createFramebuffer		(const RenderConfig& config);
