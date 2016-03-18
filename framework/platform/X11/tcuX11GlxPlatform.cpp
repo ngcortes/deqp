@@ -322,8 +322,8 @@ GLXContext GlxVisual::createContext (const GlxContextFactory&	factory,
 
 	const int attribs[] =
 	{
-		GLX_CONTEXT_MAJOR_VERSION_ARB,	apiType.getMajorVersion(),
-		GLX_CONTEXT_MINOR_VERSION_ARB,	apiType.getMinorVersion(),
+      GLX_CONTEXT_MAJOR_VERSION_ARB,	2,
+      GLX_CONTEXT_MINOR_VERSION_ARB,	0,
 		GLX_CONTEXT_FLAGS_ARB,			0,
 		GLX_CONTEXT_PROFILE_MASK_ARB,	profileMask,
 		None
