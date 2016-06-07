@@ -34,6 +34,8 @@
 #include "tcuCommandLine.hpp"
 #include "deStringUtil.hpp"
 
+#include <iostream>
+
 namespace glu
 {
 
@@ -124,8 +126,10 @@ RenderContext* createDefaultRenderContext (tcu::Platform& platform, const tcu::C
 	const ContextFactory*			factory			= DE_NULL;
 	ContextFlags					ctxFlags		= ContextFlags(0);
 
-	if (registry.empty())
+	if (registry.empty()) {
+      std::cout << "createDefaultRenderContext OpenGL is not supported\n";
 		throw tcu::NotSupportedError("OpenGL is not supported", DE_NULL, __FILE__, __LINE__);
+    }
 
 	if (cmdLine.getGLContextFlags())
 		ctxFlags = parseContextFlags(cmdLine.getGLContextFlags());
@@ -158,8 +162,10 @@ RenderContext* createDefaultRenderContext (tcu::Platform& platform, const tcu::C
 	{
 		if (cmdLine.getSurfaceType() == tcu::SURFACETYPE_FBO)
 			return new FboRenderContext(*factory, config, cmdLine);
-		else
+		else {
+          std::cout << "createDefaultRenderContext: creating context\n";
 			return factory->createContext(config, cmdLine);
+        }
 
 	}
 	catch (const std::exception&)
@@ -168,9 +174,7 @@ RenderContext* createDefaultRenderContext (tcu::Platform& platform, const tcu::C
 		if (config.type.getAPI() == ApiType::es(3,1))
 		{
 			tcu::print("Warning: Unable to create native OpenGL ES 3.1 context, will use wrapper context.\n");
-			return new ES3PlusWrapperContext(*factory, config, cmdLine);
 		}
-		else
 			throw;
 	}
 }

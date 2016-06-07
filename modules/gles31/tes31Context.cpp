@@ -30,6 +30,8 @@
 #include "gluDummyRenderContext.hpp"
 #include "tcuCommandLine.hpp"
 
+#include <iostream>
+
 namespace deqp
 {
 namespace gles31
@@ -57,11 +59,15 @@ void Context::createRenderContext (void)
 
 	try
 	{
+      std::cout << "Context::createRenderContext\n";
 		m_renderCtx		= glu::createDefaultRenderContext(m_testCtx.getPlatform(), m_testCtx.getCommandLine(), glu::ApiType::es(3,1));
+      std::cout << "success glu::createDefaultRenderContext\n";
 		m_contextInfo	= glu::ContextInfo::create(*m_renderCtx);
+      std::cout << "success glu::ContextInfo::create\n";
 	}
 	catch (...)
 	{
+      std::cout << "fail Context::createRenderContext\n";
 		destroyRenderContext();
 		throw;
 	}

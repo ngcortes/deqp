@@ -30,6 +30,7 @@
 
 #include <sstream>
 #include <iterator>
+#include <iostream>
 #include <set>
 
 #define GLX_GLXEXT_PROTOTYPES
@@ -212,6 +213,7 @@ RenderContext* GlxContextFactory::createContext (const RenderConfig&	config,
 {
 	DE_UNREF(cmdLine);
 	GlxRenderContext* const renderContext = new GlxRenderContext(*this, config);
+    std::cout << "success GlxContextFactory::createContext\n";
 	return renderContext;
 }
 
@@ -222,6 +224,7 @@ GlxContextFactory::~GlxContextFactory (void)
 GlxDisplay::GlxDisplay (EventState& eventState, const char* name)
 	: x11::Display	(eventState, name)
 {
+  std::cout << "starting GlxDisplay\n";
 	const Bool supported = glXQueryExtension(m_display, &m_errorBase, &m_eventBase);
 	if (!supported)
 		TCU_THROW(NotSupportedError, "GLX protocol not supported by X server");
@@ -238,6 +241,7 @@ GlxDisplay::GlxDisplay (EventState& eventState, const char* name)
 		m_extensions = set<string>(istream_iterator<string>(extStream),
 								   istream_iterator<string>());
 	}
+  std::cout << "ending GlxDisplay\n";
 }
 
 
@@ -259,6 +263,7 @@ static void checkGlxVersion (const GlxDisplay& dpy, int major, int minor)
 			<< dpyMajor << "." << dpyMinor
 			<< " not compatible with required version "
 			<< major << "." << minor;
+        std::cout << oss.str() << std::endl;
 		TCU_THROW(NotSupportedError, oss.str().c_str());
 	}
 }
@@ -270,6 +275,7 @@ static void checkGlxExtension (const GlxDisplay& dpy, const char* extName)
 	{
 		ostringstream oss;
 		oss << "GLX extension \"" << extName << "\" not supported";
+        std::cout << oss.str() << std::endl;
 		TCU_THROW(NotSupportedError, oss.str().c_str());
 	}
 }
@@ -297,6 +303,8 @@ int GlxVisual::getAttrib (int attribute)
 GLXContext GlxVisual::createContext (const GlxContextFactory&	factory,
 									 const ContextType&			contextType)
 {
+      std::cout << "starting GlxVisual::createContext\n";
+
 	int				profileMask	= 0;
 	const ApiType	apiType		= contextType.getAPI();
 
@@ -328,6 +336,7 @@ GLXContext GlxVisual::createContext (const GlxContextFactory&	factory,
 		GLX_CONTEXT_PROFILE_MASK_ARB,	profileMask,
 		None
 	};
+      std::cout << "ending GlxVisual::createContext\n";
 	return TCU_CHECK_GLX(factory.m_glXCreateContextAttribsARB(
 							 getXDisplay(), m_fbConfig, DE_NULL, True, attribs));
 }
@@ -536,6 +545,8 @@ static deUint64 configRank (GlxVisual& visual)
 
 static GlxVisual chooseVisual (GlxDisplay& display, const RenderConfig& cfg)
 {
+    std::cout << "starting chooseVisual\n";
+
 	::Display*	dpy			= display.getXDisplay();
 	deUint64	maxRank		= 0;
 	GLXFBConfig	maxConfig	= DE_NULL;
@@ -564,11 +575,13 @@ static GlxVisual chooseVisual (GlxDisplay& display, const RenderConfig& cfg)
 	if (maxRank == 0)
 		TCU_THROW(NotSupportedError, "Requested GLX configuration not found or unusable");
 
+    std::cout << "ending chooseVisual\n";
 	return GlxVisual(display, maxConfig);
 }
 
 GlxDrawable* createDrawable (GlxVisual& visual, const RenderConfig& config)
 {
+      std::cout << "starting createDrawable\n";
 	RenderConfig::SurfaceType surfaceType = config.surfaceType;
 
 	if (surfaceType == RenderConfig::SURFACETYPE_DONT_CARE)
@@ -583,9 +596,11 @@ GlxDrawable* createDrawable (GlxVisual& visual, const RenderConfig& config)
 	switch (surfaceType)
 	{
 		case RenderConfig::SURFACETYPE_DONT_CARE:
+          std::cout << "Impossible case\n";
 			DE_ASSERT(!"Impossible case");
 
 		case RenderConfig::SURFACETYPE_WINDOW:
+          std::cout << "success createDrawable\n";
 			return new GlxWindow(visual, config);
 			break;
 
@@ -596,9 +611,11 @@ GlxDrawable* createDrawable (GlxVisual& visual, const RenderConfig& config)
 			// \todo [2013-11-28 lauri] Pbuffers
 
 		default:
+          std::cout << "Unsupported surface type\n";
 			TCU_THROW(NotSupportedError, "Unsupported surface type");
 	}
 
+      std::cout << "null end createDrawable\n";
 	return DE_NULL;
 }
 
@@ -628,9 +645,13 @@ GlxRenderContext::GlxRenderContext (const GlxContextFactory&	factory,
 						 m_glxVisual.getAttrib(GLX_STENCIL_SIZE),
 						 m_glxVisual.getAttrib(GLX_SAMPLES))
 {
+    std::cout << "constructing GlxRenderContext\n";
 	const GlxFunctionLoader loader;
+    std::cout << "making current\n";
 	makeCurrent();
+    std::cout << "calling init\n";
 	glu::initFunctions(&m_functions, &loader, config.type.getAPI());
+    std::cout << "success GlxRenderContext()\n";
 }
 
 GlxRenderContext::~GlxRenderContext (void)
