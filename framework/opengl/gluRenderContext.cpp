@@ -127,7 +127,7 @@ RenderContext* createDefaultRenderContext (tcu::Platform& platform, const tcu::C
 	ContextFlags					ctxFlags		= ContextFlags(0);
 
 	if (registry.empty()) {
-      std::cout << "createDefaultRenderContext OpenGL is not supported\n";
+      tcu::print("createDefaultRenderContext OpenGL is not supported\n");
 		throw tcu::NotSupportedError("OpenGL is not supported", DE_NULL, __FILE__, __LINE__);
     }
 
@@ -163,7 +163,7 @@ RenderContext* createDefaultRenderContext (tcu::Platform& platform, const tcu::C
 		if (cmdLine.getSurfaceType() == tcu::SURFACETYPE_FBO)
 			return new FboRenderContext(*factory, config, cmdLine);
 		else {
-          std::cout << "createDefaultRenderContext: creating context\n";
+          tcu::print("createDefaultRenderContext: creating context\n");
 			return factory->createContext(config, cmdLine);
         }
 
