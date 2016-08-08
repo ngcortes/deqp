@@ -54,8 +54,8 @@ elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
 						OUTPUT_VARIABLE DE_GIT_DIR
 						OUTPUT_STRIP_TRAILING_WHITESPACE)
 		add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/qpReleaseInfo.inl
-						   COMMAND ${PYTHON_BIN} -B ${CMAKE_CURRENT_SOURCE_DIR}/gen_release_info.py --git --git-dir="${DE_GIT_DIR}" --out=${CMAKE_CURRENT_BINARY_DIR}/qpReleaseInfo.inl
-						   DEPENDS gen_release_info.py ${DE_GIT_DIR}/HEAD ${DE_GIT_DIR}/index) # \note HEAD updated only when changing branches
+						   COMMAND ${PYTHON_BIN} -B ${CMAKE_CURRENT_SOURCE_DIR}/gen_release_info.py --git --git-dir="${CMAKE_SOURCE_DIR}/${DE_GIT_DIR}" --out=${CMAKE_CURRENT_BINARY_DIR}/qpReleaseInfo.inl
+						   DEPENDS gen_release_info.py ${CMAKE_SOURCE_DIR}/${DE_GIT_DIR}/HEAD ${CMAKE_SOURCE_DIR}/${DE_GIT_DIR}/index) # \note HEAD updated only when changing branches
 		add_custom_target(git-rel-info DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/qpReleaseInfo.inl)
 		add_dependencies(qphelper git-rel-info)
 		include_directories(${CMAKE_CURRENT_BINARY_DIR})
