@@ -565,7 +565,7 @@ TestCase::IterateResult BufferAgeTest::iterate (void)
 		}
 
 		// do verification in the second half
-		if (m_preserveColorBuffer && currentBufferAge > 0) //buffer contain previous content, need to verify
+		if (currentBufferAge > 0) //buffer contain previous content, need to verify
 		{
 			const vector<int> framesOnBuffer = getFramesOnBuffer(bufferAges, frameNdx);
 			readPixels(m_gl, &currentBuffer);
