@@ -64,6 +64,8 @@ Display::Display (EventState& eventState, const char* name)
 	, m_display		(DE_NULL)
 	, m_deleteAtom	(DE_NULL)
 {
+	XInitThreads();
+
 	m_display = XOpenDisplay((char*)name); // Won't modify argument string.
 	if (!m_display)
 		throw ResourceError("Failed to open display", name, __FILE__, __LINE__);
