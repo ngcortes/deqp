@@ -131,6 +131,7 @@ X11Platform::X11Platform (void)
 	: m_eglPlatform	(m_eventState)
 #endif // DEQP_SUPPORT_EGL
 {
+	XInitThreads();
 #if defined (DEQP_SUPPORT_GLX)
 	m_glPlatform.registerFactory(glx::createContextFactory(m_eventState));
 #endif // DEQP_SUPPORT_GLX
