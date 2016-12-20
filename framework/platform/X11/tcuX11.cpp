@@ -227,6 +227,16 @@ void Window::setDimensions (int width, int height)
 	changes.height		= height;
 
 	XConfigureWindow(m_display.getXDisplay(), m_window, mask, &changes);
+	for(;;)
+	{
+		XEvent myevent;
+		XNextEvent(m_display.getXDisplay(), &myevent);
+		if (myevent.type == ConfigureNotify) {
+			XConfigureEvent e = myevent.xconfigure;
+			if (e.width == width && e.height == height)
+				break;
+		}
+	}
 }
 
 void Window::processEvents (void)
