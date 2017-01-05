@@ -76,6 +76,20 @@ Display::~Display (void)
 	XCloseDisplay(m_display);
 }
 
+void Display::processEvent (XEvent& event)
+{
+	switch (event.type)
+	{
+		case ClientMessage:
+			if ((unsigned)event.xclient.data.l[0] == m_deleteAtom)
+				m_eventState.setQuitFlag(true);
+			break;
+		// note: ConfigureNotify for window is handled in setDimensions()
+		default:
+			break;
+	}
+}
+
 void Display::processEvents (void)
 {
 	XEvent	event;
@@ -83,10 +97,7 @@ void Display::processEvents (void)
 	while (XPending(m_display))
 	{
 		XNextEvent(m_display, &event);
-
-		// \todo [2010-10-27 pyry] Handle ConfigureNotify?
-		if (event.type == ClientMessage && (unsigned)event.xclient.data.l[0] == m_deleteAtom)
-			m_eventState.setQuitFlag(true);
+		processEvent(event);
 	}
 }
 
@@ -227,6 +238,21 @@ void Window::setDimensions (int width, int height)
 	changes.height		= height;
 
 	XConfigureWindow(m_display.getXDisplay(), m_window, mask, &changes);
+	// wait for matching configurenotify event
+	for (;;)
+	{
+		XEvent myevent;
+		XNextEvent(m_display.getXDisplay(), &myevent);
+		if (myevent.type == ConfigureNotify)
+		{
+			XConfigureEvent e = myevent.xconfigure;
+			if (e.width == width && e.height == height)
+				break;
+		}
+		else {
+			m_display.processEvent(myevent);
+		}
+	}
 }
 
 void Window::processEvents (void)
