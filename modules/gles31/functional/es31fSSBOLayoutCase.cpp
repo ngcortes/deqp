@@ -2232,6 +2232,7 @@ SSBOLayoutCase::IterateResult SSBOLayoutCase::iterate (void)
 		{
 			const BufferBlock&	block		= m_interface.getBlock(blockDeclNdx);
 			const int			numInst		= block.isArray() ? block.getArraySize() : 1;
+			int arrayInstanceBindingPoint = bindingPoint;
 
 			for (int instNdx = 0; instNdx < numInst; instNdx++)
 			{
@@ -2243,7 +2244,9 @@ SSBOLayoutCase::IterateResult SSBOLayoutCase::iterate (void)
 					const BlockLocation& blockLoc = blockLocations[layoutNdx];
 
 					if (blockLoc.size > 0)
-						gl.bindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingPoint, buffers[blockLoc.index].buffer, blockLoc.offset, blockLoc.size);
+						gl.bindBufferRange(GL_SHADER_STORAGE_BUFFER, arrayInstanceBindingPoint, buffers[blockLoc.index].buffer, blockLoc.offset, blockLoc.size);
+
+					arrayInstanceBindingPoint += 1;
 				}
 
 				bindingPoint += 1;
