@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 import tarfile
-import urllib2
+import urllib
 import hashlib
 import argparse
 
@@ -36,9 +36,9 @@ def clean (pkg):
 			shutil.rmtree(fullPath, ignore_errors=False)
 
 def fetch (pkg):
-	print "Fetching %s" % pkg.url
+	print("Fetching %s" % pkg.url)
 
-	req			= urllib2.urlopen(pkg.url)
+	req			= urllib.request.urlopen(pkg.url)
 	data		= req.read()
 	checksum	= computeChecksum(data)
 	dstPath		= os.path.join(EXTERNAL_DIR, pkg.filename)
@@ -51,7 +51,7 @@ def fetch (pkg):
 	out.close()
 
 def extract (pkg):
-	print "Extracting %s to %s" % (pkg.filename, pkg.dstDir)
+	print("Extracting %s to %s" % (pkg.filename, pkg.dstDir))
 
 	srcPath	= os.path.join(EXTERNAL_DIR, pkg.filename)
 	tmpPath	= os.path.join(EXTERNAL_DIR, ".extract-tmp-%s" % pkg.dstDir)
@@ -74,7 +74,7 @@ def extract (pkg):
 
 	for entry in os.listdir(topLevelPath):
 		if os.path.exists(os.path.join(dstPath, entry)):
-			print "  skipping %s" % entry
+			print("  skipping %s" % entry)
 			continue
 
 		shutil.move(os.path.join(topLevelPath, entry), dstPath)
